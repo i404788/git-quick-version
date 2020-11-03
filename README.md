@@ -1,3 +1,5 @@
+**WARNING YOU ARE ON THE EDGE-CASE BRANCH, THIS IS INTENDED TO REPLICATE/DOCUMENT/SHOWCASE EDGE-CASES, NO-DEVELOPMENT IS DONE HERE**
+
 # git-quick-version
 A small immutable unix/sh script to get a reasonable version for the current git HEAD. No changes to workflow or repository required.
 
