@@ -3,16 +3,33 @@
 CTAG=""
 TAGS=$(git tag --sort=committerdate | sort -Vr)
 
+gitismerge () {
+    local sha="$1"
+    msha=$(git rev-list -1 --merges ${sha}~1..${sha})
+    [ -z "$msha" ] && return 1
+    return 0
+}
+
+checktaginhead() {
+  git merge-base --is-ancestor $1 HEAD || return 1
+
+  # Most recent tag with a commit in our branch
+  CTAG=$2
+  # Commits since tag
+  COMMIT_COUNT=$(git log $CTAG..HEAD --oneline | wc -l)
+  
+  return 0
+}
+
 for TAG in $TAGS
 do
   if [ -n "$TAG" ]; then
-    if git merge-base --is-ancestor $TAG~1 HEAD; then
-      # Most recent tag with a commit in our branch
-      CTAG=$TAG
-      # Commits since tag
-      COMMIT_COUNT=$(git log $CTAG..HEAD --oneline | wc -l)
-      break
+    if gitismerge $TAG; then
+	REF="$TAG~1"
+    else
+	REF="$TAG"
     fi
+    checktaginhead $REF $TAG && break
   fi
 done
 
