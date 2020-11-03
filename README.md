@@ -19,6 +19,11 @@ Toy example of version at each commit:
 * Release (tag: 1.0)    # "1.0+0 (d5d5d5d)"
 ```
 
+Try it out:
+```
+curl -s https://raw.githubusercontent.com/i404788/git-quick-version/master/quick-version.sh | sh
+```
+
 ## Assumptions/Goals
 You use `git tag` *sometimes*.
 
