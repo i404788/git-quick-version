@@ -1,7 +1,7 @@
 # git-quick-version
 A small immutable unix/sh script to get a reasonable version for the current git HEAD. No changes to workflow or repository required.
 
-Will output a version in format: `{tag}-{commit_count}-{short_hash}`
+Will output a version in format: `{tag}+{commit_count} ({short_hash})`
 It will take the most recent tag which has a commit in the current log.
 
 Toy example of version at each commit:
