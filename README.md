@@ -39,6 +39,8 @@ There are some edge-cases which aren't yet covered (or are minimally covered).
 ### There are no tags in the log
 Currently it will just show `0.0.0+{log_size} ({hash})`
 
+Checkout at `f5a44ca005c4ced88b9b7118db6164f4f1caa639` to see this in action.
+
 ### The tagged commit is not available on an upstream branch
 Consider the example shown below.
 
@@ -65,3 +67,4 @@ In regular usage (non-squashed merges, no commits with tags right after eachothe
 * Release (tag: 1.1)		# 1.2+0 ({hash})!!
 ```
 
+Checkout at `c9d64352875d803696d71d1e9c5e2616025107c7` to see this in action.
