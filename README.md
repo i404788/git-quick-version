@@ -52,21 +52,21 @@ We have fixed this by checking if `$TAG~1` is in the current log, **this means t
 In regular usage (non-squashed merges, no commits with tags right after eachother) this will rarely happen, however it could cause oddities.
 
 ```
-  * Dev (develop)				# 1.4+1 ({hash})
+  * Dev (develop)		# 1.4+1
  /|
-* | Release (master, tag: 1.4)	# 1.4+0 ({hash})
+* | Release (master, tag: 1.4)	# 1.4+0
 | |
-* | Merge						# 1.3+1 ({hash})
+* | Merge			# 1.3+1
 |\|
-| * Dev							# 1.3+1 ({hash})
+| * Dev				# 1.2+1
 | |
-* | Release (tag: 1.3)			# 1.3+0 ({hash})
+* | Release (tag: 1.3)		# 1.3+0
 | |
-* | Merge (tag: 1.2)			# 1.2+0 ({hash})
+* | Merge (tag: 1.2)		# 1.2+0
 |\|
-| * Dev							# 1.2+0 ({hash})
+| * Dev				# 1.2+0
 |/
-* Release (tag: 1.1)			# 1.1+0 ({hash})
+* Release (tag: 1.1)		# 1.1+0
 ```
 
 Checkout at `c9d64352875d803696d71d1e9c5e2616025107c7` to see this in action.
