@@ -63,7 +63,7 @@ Consider the example shown below.
 |\|					 |-----|1.3+1 is a direct descendant of `1.3` and does not have a tag
 | * Dev2			# 1.2+1--|---\
 | |					 |    \  |1.2+1 gets tag from the merged `Dev1`
-* | Release2 (tag: 1.3)		# 1.3+0--/     |-|`Dev1` gets the tag from `1.2`
+* | Release2 (tag: 1.3)		# 1.3+0--/     |-|`Dev1` gets the tag by exception as described 
 | |					      /
 * | Merge1 (tag: 1.2)		# 1.2+0------/
 |\|					    /
