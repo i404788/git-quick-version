@@ -33,14 +33,12 @@ if [ -z "$CTAG" ]; then
     if [ -n "$TAG" ]; then
       if gitismerge $TAG; then
         # If the tag is on a merge
-        # we want to use the previous commit
+	# we want to use the remote parent commit (^2)
         # so upstream branches can also use it
-        REF="$TAG~1"
+        checktaginhead "$TAG^2" $TAG && break
       else
-        REF="$TAG"
+	checktaginhead $TAG $TAG && break
       fi
-      # Found a suitable tag
-      checktaginhead $REF $TAG && break
     fi
   done
 fi
