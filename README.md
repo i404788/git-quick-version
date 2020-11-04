@@ -2,7 +2,8 @@
 A small immutable unix/sh script to get a reasonable version for the current git HEAD. No changes to workflow or repository required.
 
 Will output a version in format: `{tag}+{commit_count} ({short_hash})`
-It will take the most recent tag which has a commit in the current log.
+
+It will take the most recent tag which has a commit in the current log. The `commit_count` will be all commits between the `tag` and the `short_hash`.
 
 Toy example of version at each commit:
 ```
@@ -37,10 +38,10 @@ Your git log is usually chronological.
 There are some edge-cases which aren't yet covered (or are minimally covered).
 
 ### There are no tags in the log
-Currently it will just show `0.0.0+{log_size} ({hash})`
+Currently it will just show `0.0+{log_size} ({hash})`
 
 Checkout at `f5a44ca005c4ced88b9b7118db6164f4f1caa639` to see this in action.
-> `quick-version` will give `0.0.0+0 (f5a44ca)`
+> `quick-version` will give `0.0+0 (f5a44ca)`
 
 ### The tagged commit is not available on an upstream branch
 Consider the example shown below.
@@ -50,22 +51,22 @@ Even though the `develop` merged into `master` is the release tag, the `develop`
 We have fixed this by checking if `$TAG~1` is in the current log, **this means that after a tag is created the commit before it will have the same non-hash version.**
 In regular usage (non-squashed merges, no commits with tags right after eachother) this will rarely happen, however it could cause oddities.
 
-[TODO: This could be fixed by checking if the tag was created on a merge commit.]
-
 ```
-  * Dev (develop)		# 1.4+1 ({hash})
+  * Dev (develop)				# 1.4+1 ({hash})
  /|
-* Release (master, tag: 1.4)	# 1.4+0 ({hash})
-|\|
-| * Dev				# 1.4+0 ({hash})
+* | Release (master, tag: 1.4)	# 1.4+0 ({hash})
 | |
-* | Release (tag: 1.3)		# 1.4+0 ({hash})!!
-| |
-* | Release (tag: 1.2)		# 1.3+0 ({hash})!!
+* | Merge						# 1.3+1 ({hash})
 |\|
-| * Dev				# 1.2+0 ({hash})
+| * Dev							# 1.3+1 ({hash})
+| |
+* | Release (tag: 1.3)			# 1.3+0 ({hash})
+| |
+* | Merge (tag: 1.2)			# 1.2+0 ({hash})
+|\|
+| * Dev							# 1.2+0 ({hash})
 |/
-* Release (tag: 1.1)		# 1.2+0 ({hash})!!
+* Release (tag: 1.1)			# 1.1+0 ({hash})
 ```
 
 Checkout at `c9d64352875d803696d71d1e9c5e2616025107c7` to see this in action.

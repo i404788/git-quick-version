@@ -1,40 +1,53 @@
 #!/bin/sh
 
-CTAG=""
-TAGS=$(git tag --sort=committerdate | sort -Vr)
-
-gitismerge () {
-    local sha="$1"
-    msha=$(git rev-list -1 --merges ${sha}~1..${sha})
-    [ -z "$msha" ] && return 1
-    return 0
-}
-
-checktaginhead() {
-  git merge-base --is-ancestor $1 HEAD || return 1
-
-  # Most recent tag with a commit in our branch
-  CTAG=$2
-  # Commits since tag
-  COMMIT_COUNT=$(git log $CTAG..HEAD --oneline | wc -l)
-  
-  return 0
-}
-
-for TAG in $TAGS
-do
-  if [ -n "$TAG" ]; then
-    if gitismerge $TAG; then
-	REF="$TAG~1"
-    else
-	REF="$TAG"
-    fi
-    checktaginhead $REF $TAG && break
-  fi
-done
+# Check if current commit is a tag
+CTAG="$(git tag --points-at HEAD)"
+COMMIT_COUNT=0
 
 if [ -z "$CTAG" ]; then
-  CTAG="0.0.0"
+  # Current commit is not a tag
+  # So let's find a suitable tag
+  
+  TAGS=$(git tag --sort=committerdate | sort -Vr)
+
+  gitismerge () {
+      local sha="$1"
+      msha=$(git rev-list -1 --merges ${sha}~1..${sha})
+      [ -z "$msha" ] && return 1
+      return 0
+  }
+
+  checktaginhead() {
+    git merge-base --is-ancestor $1 HEAD || return 1
+
+    # Most recent tag with a commit in our branch
+    CTAG=$2
+    # Commits since tag
+    COMMIT_COUNT=$(git log $CTAG..HEAD --oneline | wc -l)
+    
+    return 0
+  }
+
+  for TAG in $TAGS
+  do
+    if [ -n "$TAG" ]; then
+      if gitismerge $TAG; then
+        # If the tag is on a merge
+        # we want to use the previous commit
+        # so upstream branches can also use it
+        REF="$TAG~1"
+      else
+        REF="$TAG"
+      fi
+      # Found a suitable tag
+      checktaginhead $REF $TAG && break
+    fi
+  done
+fi
+
+# No suitable tag found, use default version
+if [ -z "$CTAG" ]; then
+  CTAG="0.0"
   COMMIT_COUNT=$(git log --oneline | wc -l)
 fi
 
