@@ -51,6 +51,10 @@ fi
 
 HEAD_HASH=$(git log --pretty=format:'%h' -n 1)
 
-echo "$CTAG+$COMMIT_COUNT ($HEAD_HASH)"
+if [ $COMMIT_COUNT == "0" ]; then
+  echo "$CTAG"
+else
+ echo "$CTAG+$COMMIT_COUNT ($HEAD_HASH)"
+fi
 
 exit 0
