@@ -23,7 +23,7 @@ if [ -z "$CTAG" ]; then
     # Most recent tag with a commit in our branch
     CTAG=$2
     # Commits since tag
-    COMMIT_COUNT=$(git log $CTAG..HEAD --oneline | wc -l)
+    COMMIT_COUNT=$(git log $CTAG..HEAD --oneline | wc -l | xargs)
     
     return 0
   }
@@ -46,7 +46,7 @@ fi
 # No suitable tag found, use default version
 if [ -z "$CTAG" ]; then
   CTAG="0.0"
-  COMMIT_COUNT=$(git log --oneline | wc -l)
+  COMMIT_COUNT=$(git log --oneline | wc -l | xargs)
 fi
 
 HEAD_HASH=$(git log --pretty=format:'%h' -n 1)
