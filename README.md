@@ -3,6 +3,8 @@ A small immutable unix/sh script to get a reasonable version for the current git
 
 Will output a version in format: `{tag}+{commit_count} ({short_hash})`
 
+> Since version 1.3 we support rfc3896 output in format `{tag}.${commit_count}-{short_hash}` using the `-o rfc3896` option.
+
 It will take the most recent tag which has a commit in the current log. The `commit_count` will be all commits between the `tag` and the `short_hash`.
 
 Toy example of version at each commit:
@@ -28,7 +30,8 @@ curl -s https://raw.githubusercontent.com/i404788/git-quick-version/master/quick
 ## Assumptions/Goals
 You use `git tag` *sometimes*.
 
-Your version can be any ASCII printable-string. Some protocols might have character constraints, this is not meant for that.
+~Your version can be any ASCII printable-string. Some protocols might have character constraints, this is not meant for that.~ 
+Since version 1.3 this has been added.
 
 You want your version to be easily readable & accurate with *near-zero* effort and/or overhead.
 

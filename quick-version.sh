@@ -33,7 +33,7 @@ if [ -z "$CTAG" ]; then
     if [ -n "$TAG" ]; then
       if gitismerge $TAG; then
         # If the tag is on a merge
-	# we want to use the remote parent commit (^2)
+      	# we want to use the remote parent commit (^2)
         # so upstream branches can also use it
         checktaginhead "$TAG^2" $TAG && break
       else
@@ -51,10 +51,65 @@ fi
 
 HEAD_HASH=$(git log --pretty=format:'%h' -n 1)
 
-if [ $COMMIT_COUNT == "0" ]; then
-  echo "$CTAG"
-else
- echo "$CTAG+$COMMIT_COUNT ($HEAD_HASH)"
-fi
+# export CTAG
+# export COMMIT_COUNT
+# export HEAD_HASH
 
+human_format() 
+{
+  if [ $COMMIT_COUNT = "0" ]; then
+   echo "$CTAG ($HEAD_HASH)"
+  else
+   echo "$CTAG+$COMMIT_COUNT ($HEAD_HASH)"
+  fi
+}
+
+rfc3986_format()
+{
+  if [ $COMMIT_COUNT = "0" ]; then
+   echo "$CTAG"
+  else
+   echo "$CTAG.$COMMIT_COUNT-$HEAD_HASH"
+  fi
+}
+
+OUTPUT_FORMATS="rfc3986, human"
+while test $# -gt 0; do
+  case "$1" in
+    -h|--help)
+      echo "quick-version - A small unix/sh script to get a reasonable version for the current git HEAD"
+      echo " "
+      echo "options:"
+      echo "-h, --help                show brief help"
+      echo "-o <output format>        specify the output format ($OUTPUT_FORMATS)"
+      exit 0
+      ;;
+    -o)
+      shift
+      if test $# -gt 0; then
+        if [ $1 = "rfc3986" ]; then 
+          # RFC3986
+          rfc3986_format
+          exit 0
+        elif [ $1 = "human" ]; then
+          # Human readable (original format)  
+          human_format
+          exit 0
+        else
+          echo "Output format not defined: $1 (valid: $OUTPUT_FORMATS)"
+          exit 1
+        fi
+      else
+        echo "Missing output format (valid: $OUTPUT_FORMATS)"
+        exit 1
+      fi
+      shift
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+human_format
 exit 0
